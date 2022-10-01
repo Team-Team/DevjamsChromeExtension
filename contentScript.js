@@ -1,15 +1,38 @@
 (() => {
+  let lastUrl = location.href;
+  new MutationObserver(() => {
+    const url = location.href;
+    if (url !== lastUrl) {
+      lastUrl = url;
+      onUrlChange();
+    }
+  }).observe(document, { subtree: true, childList: true });
+
+  function onUrlChange() {
+    window.location.reload();
+  }
+
   setInterval(extension, 10);
 
   const beta = window.location.href.split("/")[3];
+  const gamma = window.location.href.split("?")[0];
+
+  if (gamma == "https://www.youtube.com/results") {
+    alert("You are in focus mode");
+    window.location.href = "https://www.youtube.com/";
+  }
 
   if (beta == "shorts") {
-    alert("Shorts");
+    // alert("Shorts");
+    alert("You are in focus mode");
     window.location.href = "https://www.youtube.com/";
   }
 
   document.querySelector("#contentContainer").innerHTML = "<div></div>";
-  document.querySelector("#content > ytd-mini-guide-renderer").innerHTML = "";
+  document.querySelector("#content > ytd-mini-guide-renderer").innerHTML =
+    "<div></div>";
+  document.querySelector("#content > ytd-mini-guide-renderer").innerHTML =
+    "<div></div>";
 
   console.log(window.location.href);
 
@@ -218,5 +241,14 @@ function extension() {
     if (what) {
       what.innerHTML = "";
     }
+
+    // if (
+    //   document.querySelector("#text > a").innerHTML !=
+    //   "Dr.Gajendra Purohit Exam Prep"
+    // ) {
+    //   // alert("Please Subscribe to Dr.Gajendra Purohit Exam Prep");
+    //   // window.location.href = "https://www.youtube.com";
+    //   console.log("not");
+    // }
   }
 }
