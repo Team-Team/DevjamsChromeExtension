@@ -44,7 +44,64 @@ const channel_list = [
   },
 ];
 
-function main() {
+async function main() {
+  const toggle = await chrome.storage.sync.get(["toggle"]);
+  if (toggle.toggle === false) {
+    return;
+  }
+  const alpha = window.location.href.split("?")[0];
+  if (window.location.href.search("sp=EgIQAg%253D%253D") != -1) {
+    setTimeout(() => {
+      const buttons = document.getElementsByTagName(
+        "ytd-subscribe-button-renderer"
+      );
+      const channelLinks = document.getElementsByClassName("channel-link");
+      const channelImage = document.getElementsByClassName("yt-img-shadow");
+      let tname = "";
+      let index = -1;
+      let cname = "";
+      console.log(buttons.length);
+      for (let i = 0; i < buttons.length; i++) {
+        while (cname == tname) {
+          index++;
+          cname = channelLinks[index].href.split("/");
+          cname = cname[cname.length - 1];
+        }
+        let newChannel = {
+          link: channelLinks[index].href,
+          imgLink: channelImage[index].src,
+          name: cname,
+        };
+        tname = cname;
+        buttons[i].innerHTML =
+          "<button style='width:150px;height: 40px;border-radius: 2px;border:none;background:#ff0000;color:#ffffff;'>Whitelist</button>";
+        buttons[i].addEventListener("click", async (e) => {
+          const channels = await chrome.storage.sync.get(["whitelist"]);
+          if (
+            channels.whitelist.channels
+              .map((channel) => channel.name)
+              .includes(cname)
+          ) {
+            return;
+          }
+          console.log(channels.whitelist.channels);
+          if (!channels.whitelist.channels) {
+            chrome.storage.sync.set({
+              ["whitelist"]: { channels: [newChannel] },
+            });
+          } else {
+            chrome.storage.sync.set({
+              ["whitelist"]: {
+                channels: [...channels.whitelist.channels, newChannel],
+              },
+            });
+          }
+        });
+      }
+    }, 2000);
+  } else if (alpha == "https://www.youtube.com/results") {
+    window.location.href += "&sp=EgIQAg%253D%253D";
+  }
   // Watching Url from extenal resources
   let lastUrl = location.href;
   new MutationObserver(() => {
@@ -67,7 +124,7 @@ function anitEverything() {
   const href_without_queries = window.location.href.split("?")[0];
   if (
     ![
-      // "https://www.youtube.com/results",
+      "https://www.youtube.com/results",
       "https://www.youtube.com/",
       "https://m.youtube.com/",
       "https://m.youtube.com/watch",
@@ -104,7 +161,7 @@ async function clearRelated() {
     return;
   }
   let recomendationPanel = document.getElementById("related");
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 300; i++) {
     let relatedArray = [];
 
     let containerDiv = recomendationPanel
@@ -139,7 +196,7 @@ async function clearRelated() {
   }
 }
 
-function clearHomepage() {
+async function clearHomepage() {
   setInterval(() => {
     const alpha = window.location.href.split("?")[0];
     if (
@@ -147,9 +204,13 @@ function clearHomepage() {
       alpha == "https://m.youtube.com/"
     ) {
       let element = document.getElementById("primary");
-      element && (() => (element.innerHTML = Homepage()))();
+      element && (async () => (element.innerHTML = await Homepage()))();
     }
   }, 1000);
+}
+
+async function fetchToggle() {
+  console.log(await chrome.storage.sync.get(["toggle"]));
 }
 
 function fetchBookmarks() {
@@ -229,7 +290,9 @@ const getTime = (t) => {
 // ********************************COMPONENETS************************************* //
 //
 
-function Channel() {
+async function Channel() {
+  let channel_list = await chrome.storage.sync.get(["whitelist"]);
+  channel_list = channel_list.whitelist.channels;
   return channel_list.map((x, index) => {
     return `<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); border-bottom: 1px solid #383838; padding:24px 0;">
       <div style="grid-column: span 2 / span 2;">
@@ -243,7 +306,6 @@ function Channel() {
           <h1 style="color:white; weight:bold;">${x.name}</h1>
           </div>
           <div>
-          <h2 style="color:#A19A9C;">Subscribers ${x.numberOfSubs} • Videos ${x.numberOfVideos}</h2>
           </div>
           </div>
       </div>
@@ -262,18 +324,19 @@ function Channel() {
   });
 }
 
-function Final() {
-  return Channel().join("\n");
+async function Final() {
+  const c = await Channel();
+  return c.join("\n");
 }
 
-function Homepage() {
+async function Homepage() {
   return `
       <div style="display: flex; flex-direction: column; row-gap: 3rem;padding: 5%; width:90%; justify-content: center;">
         <div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); width:100%; align-items: center; ">
           <h1 style="color:white; weight:bold; grid-column: span 4 / span 4; font-weight: 500; font-size: 32px;">Focus Mode</h1>
           <div style="grid-column: span 6 / span 6"></div>
           <div style="display: flex; align-items: center; grid-column: span 2 / span 2">
-              <a href="#" style="border-radius: 3px; padding: 16px; text-decoration:none; width:100%; border:1px solid #FF0000">
+              <a href="/results?search_query=" style="border-radius: 3px; padding: 16px; text-decoration:none; width:100%; border:1px solid #FF0000">
                 <h1 style="font-weight: 600; font-size: 16px; text-align: center; color: #FFFFFF;">Add Channel</h1>
               </a>
               </div>
@@ -284,7 +347,7 @@ function Homepage() {
             width: 100%; 
             color:white;" >
           <div style="display: flex; flex-direction: column; width:100%;">
-            ${Final()}
+            ${await Final()}
           </div>
         </div>
       </div>`;

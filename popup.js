@@ -31,7 +31,8 @@ const viewBookmarks = (currentBookmarks = []) => {
       addNewBookmark(bookmarksElement, bookmark);
     }
   } else {
-    bookmarksElement.innerHTML = '<i class="row" style="color: white">No bookmarks to show</i>';
+    bookmarksElement.innerHTML =
+      '<i class="row" style="color: white">No bookmarks to show</i>';
   }
 
   return;
@@ -75,6 +76,11 @@ const setBookmarkAttributes = (src, eventListener, controlParentElement) => {
   controlParentElement.appendChild(controlElement);
 };
 
+document.getElementById("toggle").addEventListener("click", async () => {
+  const toggle = await chrome.storage.sync.get(["toggle"]);
+  alert(toggle.toggle);
+  await chrome.storage.sync.set(["toggle"], !toggle.toggle);
+});
 document.addEventListener("DOMContentLoaded", async () => {
   const activeTab = await getActiveTabURL();
   const queryParameters = activeTab.url.split("?")[1];
