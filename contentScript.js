@@ -45,6 +45,7 @@ const channel_list = [
 ];
 
 async function main() {
+  await chrome.storage.sync.set(["toggle"], true);
   const toggle = await chrome.storage.sync.get(["toggle"]);
   if (toggle.toggle === false) {
     return;
