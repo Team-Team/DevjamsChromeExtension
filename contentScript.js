@@ -56,7 +56,7 @@ function main() {
   }).observe(document, { subtree: true, childList: true });
   // antiSearch();
   anitEverything();
-  clearRelated();
+  setTimeout(clearRelated, 5000);
   clearHomepage();
   handleBookmarks();
   newVideoLoaded();
@@ -98,7 +98,46 @@ function antiShorts() {
   }
 }
 
-async function clearRelated() {}
+async function clearRelated() {
+  const alpha = window.location.href.split("?")[0];
+  if (alpha != "https://www.youtube.com/watch") {
+    return;
+  }
+  let recomendationPanel = document.getElementById("related");
+  for (let i = 0; i < 30; i++) {
+    let relatedArray = [];
+
+    let containerDiv = recomendationPanel
+      .getElementsByTagName("ytd-compact-video-renderer")
+      [i].getElementsByClassName("ytd-thumbnail")[0];
+    link = containerDiv.getAttribute("href");
+    let finalLink = "https://youtube.com" + link;
+    relatedArray.push(finalLink);
+
+    url = "https://focus-mode-backend.herokuapp.com/";
+    vidLink = window.location.href;
+    const response = await fetch(url, {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      redirect: "follow",
+      referrerPolicy: "no-referrer",
+      body: JSON.stringify({
+        video: vidLink,
+        related: relatedArray,
+      }),
+    });
+    console.log(relatedArray);
+    result = await response.json();
+    if (result[0] < 1) {
+      containerDiv.closest("div").style.display = "none";
+    }
+  }
+}
 
 function clearHomepage() {
   setInterval(() => {
