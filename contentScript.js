@@ -108,6 +108,8 @@ async function clearRelated() {
 }
 
 function clearHomepage() {
+  let element = document.getElementById("primary");
+  element && (() => (element.innerHTML = Homepage()))();
   setInterval(() => {
     const alpha = window.location.href.split("?")[0];
     if (
