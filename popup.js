@@ -78,10 +78,7 @@ const setBookmarkAttributes = (src, eventListener, controlParentElement) => {
 
 document.getElementById("toggle").addEventListener("click", async () => {
   let toggle = await chrome.storage.sync.get(["toggle"]);
-  alert(toggle.toggle);
-  await chrome.storage.sync.set(["toggle"], !toggle.toggle);
-  toggle = await chrome.storage.sync.get(["toggle"]);
-  alert(toggle.toggle);
+  await chrome.storage.sync.set({ ["toggle"]: !toggle.toggle });
 });
 document.addEventListener("DOMContentLoaded", async () => {
   const activeTab = await getActiveTabURL();

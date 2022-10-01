@@ -45,8 +45,10 @@ const channel_list = [
 ];
 
 async function main() {
-  await chrome.storage.sync.set(["toggle"], true);
   const toggle = await chrome.storage.sync.get(["toggle"]);
+  if (toggle.toggle === undefined) {
+    const toggle = await chrome.storage.sync.set({ ["toggle"]: true });
+  }
   if (toggle.toggle === false) {
     return;
   }
@@ -75,7 +77,7 @@ async function main() {
         };
         tname = cname;
         buttons[i].innerHTML =
-          "<button style='width:150px;height: 40px;border-radius: 2px;border:none;background:#ff0000;color:#ffffff;'>Whitelist</button>";
+          "<button href='/' style='width:150px;height: 40px;border-radius: 2px;border:none;background:#ff0000;color:#ffffff;'>Whitelist</button>";
         buttons[i].addEventListener("click", async (e) => {
           const channels = await chrome.storage.sync.get(["whitelist"]);
           if (
