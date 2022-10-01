@@ -46,8 +46,8 @@ const channel_list = [
 
 async function main() {
   const toggle = await chrome.storage.sync.get(["toggle"]);
-  if (toggle.toggle === undefined) {
-    const toggle = await chrome.storage.sync.set({ ["toggle"]: true });
+  if (toggle.toggle == undefined) {
+    await chrome.storage.sync.set({ ["toggle"]: true });
   }
   if (toggle.toggle === false) {
     return;
@@ -295,6 +295,9 @@ const getTime = (t) => {
 
 async function Channel() {
   let channel_list = await chrome.storage.sync.get(["whitelist"]);
+  if (channel_list.whitelist == undefined) {
+    chrome.storage.sync.set({ ["whitelist"]: { channels: [] } });
+  }
   channel_list = channel_list.whitelist.channels;
   return channel_list.map((x, index) => {
     return `<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); border-bottom: 1px solid #383838; padding:24px 0;">
