@@ -1,6 +1,48 @@
 let youtubeLeftControls, youtubePlayer;
 let currentVideo = "";
 let currentVideoBookmarks = [];
+const channel_list = [
+  {
+    link: "https://www.youtube.com/c/DrGajendraPurohitMathematics",
+    name: "Dr.Gajendra Purohit",
+    imgLink:
+      "https://yt3.ggpht.com/ytc/AMLnZu8kXYOXnHIGpTQubSEyUjzjtttv0kJ_Bj7FAfhv=s176-c-k-c0x00ffffff-no-rj",
+    numberOfSubs: 10,
+    numberOfVideos: 15,
+  },
+  {
+    link: "https://www.youtube.com/c/ApnaCollegeOfficial",
+    name: "Apna College",
+    imgLink:
+      "https://yt3.ggpht.com/O12gYmCwBASezJpxddXOj1PEirMgxCGX2gOiJ3plomaK4E0K1hr_iobbQEWz1e4QVMflTmug=s176-c-k-c0x00ffffff-no-rj-mo",
+    numberOfSubs: 10,
+    numberOfVideos: 15,
+  },
+  {
+    link: "https://www.youtube.com/c/nesoacademy",
+    name: "Neso Academy",
+    imgLink:
+      "https://yt3.ggpht.com/ytc/AMLnZu-IKrxloiUX0fNCVH6QqIjmTCSQ74CBvlotA00I=s176-c-k-c0x00ffffff-no-rj",
+    numberOfSubs: 10,
+    numberOfVideos: 15,
+  },
+  {
+    link: "https://www.youtube.com/c/CodeWithHarry",
+    name: "CodeWithHarry",
+    imgLink:
+      "https://yt3.ggpht.com/ytc/AMLnZu8dZQJYCt6Ffcd-pl113huuo_HJ3PpvgkyFk5FkrQ=s176-c-k-c0x00ffffff-no-rj",
+    numberOfSubs: 10,
+    numberOfVideos: 15,
+  },
+  {
+    link: "https://www.youtube.com/c/JennyslecturesCSITNETJRF",
+    name: "Jenny's lectures CS/IT NET&JRF",
+    imgLink:
+      "https://yt3.ggpht.com/ytc/AMLnZu_2_iLE-XxqIjRg-Ms_iEeJUP3plS3XUbfgftMOcA=s176-c-k-c0x00ffffff-no-rj",
+    numberOfSubs: 10,
+    numberOfVideos: 15,
+  },
+];
 
 function main() {
   // Watching Url from extenal resources
@@ -13,13 +55,32 @@ function main() {
     }
   }).observe(document, { subtree: true, childList: true });
   // antiSearch();
-  antiShorts();
+  anitEverything();
   clearRelated();
   clearHomepage();
   handleBookmarks();
   newVideoLoaded();
 }
 main();
+
+function anitEverything() {
+  const href_without_queries = window.location.href.split("?")[0];
+  if (
+    ![
+      // "https://www.youtube.com/results",
+      "https://www.youtube.com/",
+      "https://m.youtube.com/",
+      "https://m.youtube.com/watch",
+      "https://www.youtube.com/watch",
+    ].includes(href_without_queries) &&
+    !channel_list.some(
+      (channel_object) => href_without_queries.search(channel_object.link) > -1
+    )
+  ) {
+    alert("You are in focus mode");
+    window.location.href = "https://www.youtube.com/";
+  }
+}
 
 function antiSearch() {
   const href_without_queries = window.location.href.split("?")[0];
@@ -47,6 +108,8 @@ async function clearRelated() {
 }
 
 function clearHomepage() {
+  let element = document.getElementById("primary");
+  element && (() => (element.innerHTML = Homepage()))();
   setInterval(() => {
     const alpha = window.location.href.split("?")[0];
     if (
@@ -56,7 +119,7 @@ function clearHomepage() {
       let element = document.getElementById("primary");
       element && (() => (element.innerHTML = Homepage()))();
     }
-  }, 10);
+  }, 1000);
 }
 
 function fetchBookmarks() {
@@ -135,49 +198,6 @@ const getTime = (t) => {
 //
 // ********************************COMPONENETS************************************* //
 //
-
-const channel_list = [
-  {
-    link: "https://www.youtube.com/c/DrGajendraPurohitMathematics",
-    name: "Dr.Gajendra Purohit",
-    imgLink:
-      "https://yt3.ggpht.com/ytc/AMLnZu8kXYOXnHIGpTQubSEyUjzjtttv0kJ_Bj7FAfhv=s176-c-k-c0x00ffffff-no-rj",
-    numberOfSubs: 10,
-    numberOfVideos: 15,
-  },
-  {
-    link: "https://www.youtube.com/c/ApnaCollegeOfficial",
-    name: "Apna College",
-    imgLink:
-      "https://yt3.ggpht.com/O12gYmCwBASezJpxddXOj1PEirMgxCGX2gOiJ3plomaK4E0K1hr_iobbQEWz1e4QVMflTmug=s176-c-k-c0x00ffffff-no-rj-mo",
-    numberOfSubs: 10,
-    numberOfVideos: 15,
-  },
-  {
-    link: "https://www.youtube.com/c/nesoacademy",
-    name: "Neso Academy",
-    imgLink:
-      "https://yt3.ggpht.com/ytc/AMLnZu-IKrxloiUX0fNCVH6QqIjmTCSQ74CBvlotA00I=s176-c-k-c0x00ffffff-no-rj",
-    numberOfSubs: 10,
-    numberOfVideos: 15,
-  },
-  {
-    link: "https://www.youtube.com/c/CodeWithHarry",
-    name: "CodeWithHarry",
-    imgLink:
-      "https://yt3.ggpht.com/ytc/AMLnZu8dZQJYCt6Ffcd-pl113huuo_HJ3PpvgkyFk5FkrQ=s176-c-k-c0x00ffffff-no-rj",
-    numberOfSubs: 10,
-    numberOfVideos: 15,
-  },
-  {
-    link: "https://www.youtube.com/c/JennyslecturesCSITNETJRF",
-    name: "Jenny's lectures CS/IT NET&JRF",
-    imgLink:
-      "https://yt3.ggpht.com/ytc/AMLnZu_2_iLE-XxqIjRg-Ms_iEeJUP3plS3XUbfgftMOcA=s176-c-k-c0x00ffffff-no-rj",
-    numberOfSubs: 10,
-    numberOfVideos: 15,
-  },
-];
 
 function Channel() {
   return channel_list.map((x, index) => {
