@@ -98,14 +98,7 @@ function antiShorts() {
   }
 }
 
-async function clearRelated() {
-  setInterval(() => {
-    const alpha = window.location.href.split("?")[0];
-    if (alpha == "https://www.youtube.com/watch") {
-      clearElementById("related");
-    }
-  }, 10);
-}
+async function clearRelated() {}
 
 function clearHomepage() {
   setInterval(() => {
