@@ -31,7 +31,7 @@ const viewBookmarks = (currentBookmarks = []) => {
       addNewBookmark(bookmarksElement, bookmark);
     }
   } else {
-    bookmarksElement.innerHTML = '<i class="row">No bookmarks to show</i>';
+    bookmarksElement.innerHTML = '<i class="row" style="color: white">No bookmarks to show</i>';
   }
 
   return;
