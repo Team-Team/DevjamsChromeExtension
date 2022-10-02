@@ -4,10 +4,13 @@
 <div class="container">
   <div>
     <!-- <button id="toggle">Toggle</button> -->
-    <label class="switch">
-      <input id="toggle" type="checkbox" checked>
-      <span class="slider round"></span>
-    </label>
+    <div style="display: flex; column-gap: 0.75rem; align-items:center; margin-bottom: 4px;">
+      <span style="color:white; font-weight: bold;">Toggle focus mode:</span>
+      <label class="switch">
+        <input id="toggle" type="checkbox" checked>
+        <span class="slider round"></span>
+      </label>
+    </div>
     <div class="title">Your bookmarks for this video</div>
     <div class="bookmarks" id="bookmarks"></div>
   </div>
