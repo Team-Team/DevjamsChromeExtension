@@ -78,11 +78,11 @@ async function main() {
         };
         buttons[
           i
-        ].innerHTML = `<button href='/' style='background: #CC0000; border-radius: 3px; text-decoration:none; cursor:pointer;'>
+        ].innerHTML = `<a href='/' style='background: #CC0000; border-radius: 3px; text-decoration:none; cursor:pointer;'>
           <h1 style="font-weight: 600; font-size: 16px; text-align: center; color: #FFFFFF; padding:10px">
             Whitelist
           </h1>
-          </button>`;
+          </a>`;
         buttons[i].addEventListener("click", async (e) => {
           const channels = await chrome.storage.sync.get(["whitelist"]);
           if (
@@ -355,7 +355,7 @@ async function Homepage() {
           <h1 style="color:white; weight:bold; grid-column: span 4 / span 4; font-weight: 500; font-size: 32px;">Focus Mode</h1>
           <div style="grid-column: span 6 / span 6"></div>
           <div style="display: flex; align-items: center; grid-column: span 2 / span 2">
-              <a href="/results?search_query=" style="border-radius: 3px; padding: 16px; text-decoration:none; width:100%; border:1px solid #FF0000">
+              <a href="www.youtube.com/" style="border-radius: 3px; padding: 16px; text-decoration:none; width:100%; border:1px solid #FF0000">
                 <h1 style="font-weight: 600; font-size: 16px; text-align: center; color: #FFFFFF;">Add Channel</h1>
               </a>
               </div>
