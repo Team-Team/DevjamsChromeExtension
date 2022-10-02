@@ -76,14 +76,16 @@ const setBookmarkAttributes = (src, eventListener, controlParentElement) => {
   controlParentElement.appendChild(controlElement);
 };
 
-document.getElementById("toggle").addEventListener("click", async () => {
-  let toggle = await chrome.storage.sync.get(["toggle"]);
-  await chrome.storage.sync.set({ ["toggle"]: !toggle.toggle });
+document.getElementById("toggle").addEventListener("click", async (e) => {
+  await chrome.storage.sync.set({ ["toggle"]: e.target.checked });
 });
+
 document.addEventListener("DOMContentLoaded", async () => {
   const activeTab = await getActiveTabURL();
   const queryParameters = activeTab.url.split("?")[1];
   const urlParameters = new URLSearchParams(queryParameters);
+  let toggle = await chrome.storage.sync.get(["toggle"]);
+  document.getElementById("toggle").checked = toggle.toggle;
 
   const currentVideo = urlParameters.get("v");
 
