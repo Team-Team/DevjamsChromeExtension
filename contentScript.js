@@ -1,44 +1,38 @@
 let youtubeLeftControls, youtubePlayer;
 let currentVideo = "";
 let currentVideoBookmarks = [];
-const channel_list = [
-  {
+const channel_list = [{
     link: "https://www.youtube.com/c/DrGajendraPurohitMathematics",
     name: "Dr.Gajendra Purohit",
-    imgLink:
-      "https://yt3.ggpht.com/ytc/AMLnZu8kXYOXnHIGpTQubSEyUjzjtttv0kJ_Bj7FAfhv=s176-c-k-c0x00ffffff-no-rj",
+    imgLink: "https://yt3.ggpht.com/ytc/AMLnZu8kXYOXnHIGpTQubSEyUjzjtttv0kJ_Bj7FAfhv=s176-c-k-c0x00ffffff-no-rj",
     numberOfSubs: 10,
     numberOfVideos: 15,
   },
   {
     link: "https://www.youtube.com/c/ApnaCollegeOfficial",
     name: "Apna College",
-    imgLink:
-      "https://yt3.ggpht.com/O12gYmCwBASezJpxddXOj1PEirMgxCGX2gOiJ3plomaK4E0K1hr_iobbQEWz1e4QVMflTmug=s176-c-k-c0x00ffffff-no-rj-mo",
+    imgLink: "https://yt3.ggpht.com/O12gYmCwBASezJpxddXOj1PEirMgxCGX2gOiJ3plomaK4E0K1hr_iobbQEWz1e4QVMflTmug=s176-c-k-c0x00ffffff-no-rj-mo",
     numberOfSubs: 10,
     numberOfVideos: 15,
   },
   {
     link: "https://www.youtube.com/c/nesoacademy",
     name: "Neso Academy",
-    imgLink:
-      "https://yt3.ggpht.com/ytc/AMLnZu-IKrxloiUX0fNCVH6QqIjmTCSQ74CBvlotA00I=s176-c-k-c0x00ffffff-no-rj",
+    imgLink: "https://yt3.ggpht.com/ytc/AMLnZu-IKrxloiUX0fNCVH6QqIjmTCSQ74CBvlotA00I=s176-c-k-c0x00ffffff-no-rj",
     numberOfSubs: 10,
     numberOfVideos: 15,
   },
   {
     link: "https://www.youtube.com/c/CodeWithHarry",
     name: "CodeWithHarry",
-    imgLink:
-      "https://yt3.ggpht.com/ytc/AMLnZu8dZQJYCt6Ffcd-pl113huuo_HJ3PpvgkyFk5FkrQ=s176-c-k-c0x00ffffff-no-rj",
+    imgLink: "https://yt3.ggpht.com/ytc/AMLnZu8dZQJYCt6Ffcd-pl113huuo_HJ3PpvgkyFk5FkrQ=s176-c-k-c0x00ffffff-no-rj",
     numberOfSubs: 10,
     numberOfVideos: 15,
   },
   {
     link: "https://www.youtube.com/c/JennyslecturesCSITNETJRF",
     name: "Jenny's lectures CS/IT NET&JRF",
-    imgLink:
-      "https://yt3.ggpht.com/ytc/AMLnZu_2_iLE-XxqIjRg-Ms_iEeJUP3plS3XUbfgftMOcA=s176-c-k-c0x00ffffff-no-rj",
+    imgLink: "https://yt3.ggpht.com/ytc/AMLnZu_2_iLE-XxqIjRg-Ms_iEeJUP3plS3XUbfgftMOcA=s176-c-k-c0x00ffffff-no-rj",
     numberOfSubs: 10,
     numberOfVideos: 15,
   },
@@ -47,7 +41,9 @@ const channel_list = [
 async function main() {
   const toggle = await chrome.storage.sync.get(["toggle"]);
   if (toggle.toggle == undefined) {
-    await chrome.storage.sync.set({ ["toggle"]: true });
+    await chrome.storage.sync.set({
+      ["toggle"]: true
+    });
   }
   if (toggle.toggle === false) {
     return;
@@ -77,20 +73,26 @@ async function main() {
         };
         tname = cname;
         buttons[i].innerHTML =
-          "<button href='/' style='width:150px;height: 40px;border-radius: 2px;border:none;background:#ff0000;color:#ffffff;'>Whitelist</button>";
+          `<button href='/' style='background: #CC0000; border-radius: 3px; text-decoration:none; cursor:pointer;'>
+          <h1 style="font-weight: 600; font-size: 16px; text-align: center; color: #FFFFFF; padding:10px">
+            Whitelist
+          </h1>
+          </button>`;
         buttons[i].addEventListener("click", async (e) => {
           const channels = await chrome.storage.sync.get(["whitelist"]);
           if (
             channels.whitelist.channels
-              .map((channel) => channel.name)
-              .includes(cname)
+            .map((channel) => channel.name)
+            .includes(cname)
           ) {
             return;
           }
           console.log(channels.whitelist.channels);
           if (!channels.whitelist.channels) {
             chrome.storage.sync.set({
-              ["whitelist"]: { channels: [newChannel] },
+              ["whitelist"]: {
+                channels: [newChannel]
+              },
             });
           } else {
             chrome.storage.sync.set({
@@ -113,7 +115,10 @@ async function main() {
       lastUrl = url;
       window.location.reload();
     }
-  }).observe(document, { subtree: true, childList: true });
+  }).observe(document, {
+    subtree: true,
+    childList: true
+  });
   // antiSearch();
   anitEverything();
   setTimeout(clearRelated, 5000);
@@ -168,8 +173,7 @@ async function clearRelated() {
     let relatedArray = [];
 
     let containerDiv = recomendationPanel
-      .getElementsByTagName("ytd-compact-video-renderer")
-      [i].getElementsByClassName("ytd-thumbnail")[0];
+      .getElementsByTagName("ytd-compact-video-renderer")[i].getElementsByClassName("ytd-thumbnail")[0];
     link = containerDiv.getAttribute("href");
     let finalLink = "https://youtube.com" + link;
     relatedArray.push(finalLink);
@@ -223,9 +227,14 @@ function fetchBookmarks() {
     });
   });
 }
+
 function handleBookmarks() {
   chrome.runtime.onMessage.addListener((obj, sender, response) => {
-    const { type, value, videoId } = obj;
+    const {
+      type,
+      value,
+      videoId
+    } = obj;
 
     if (type === "NEW") {
       currentVideo = videoId;
@@ -296,7 +305,11 @@ const getTime = (t) => {
 async function Channel() {
   let channel_list = await chrome.storage.sync.get(["whitelist"]);
   if (channel_list.whitelist == undefined) {
-    chrome.storage.sync.set({ ["whitelist"]: { channels: [] } });
+    chrome.storage.sync.set({
+      ["whitelist"]: {
+        channels: []
+      }
+    });
   }
   channel_list = channel_list.whitelist.channels;
   return channel_list.map((x, index) => {
