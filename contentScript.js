@@ -54,6 +54,28 @@ async function main() {
   if (toggle.toggle === false) {
     return;
   }
+  // Watching Url from extenal resources
+  let lastUrl = location.href;
+  new MutationObserver(() => {
+    const url = location.href;
+    if (url !== lastUrl) {
+      lastUrl = url;
+      window.location.reload();
+    }
+  }).observe(document, {
+    subtree: true,
+    childList: true,
+  });
+  // antiSearch();
+  anitEverything();
+  setTimeout(clearRelated, 2000);
+  clearHomepage();
+  handleBookmarks();
+  newVideoLoaded();
+}
+main();
+
+async function searchDirectToChannels() {
   const alpha = window.location.href.split("?")[0];
   if (window.location.href.search("sp=EgIQAg%253D%253D") != -1) {
     setTimeout(() => {
@@ -112,26 +134,7 @@ async function main() {
   } else if (alpha == "https://www.youtube.com/results") {
     window.location.href += "&sp=EgIQAg%253D%253D";
   }
-  // Watching Url from extenal resources
-  let lastUrl = location.href;
-  new MutationObserver(() => {
-    const url = location.href;
-    if (url !== lastUrl) {
-      lastUrl = url;
-      window.location.reload();
-    }
-  }).observe(document, {
-    subtree: true,
-    childList: true,
-  });
-  // antiSearch();
-  anitEverything();
-  setTimeout(clearRelated, 5000);
-  clearHomepage();
-  handleBookmarks();
-  newVideoLoaded();
 }
-main();
 
 function anitEverything() {
   const href_without_queries = window.location.href.split("?")[0];
@@ -174,9 +177,17 @@ async function clearRelated() {
     return;
   }
   let recomendationPanel = document.getElementById("related");
+  let containerDiv = recomendationPanel.getElementsByTagName(
+    "ytd-compact-video-renderer"
+  );
+  for (let i = 0; i < containerDiv.length; i++) {
+    containerDiv[i]
+      .getElementsByClassName("ytd-thumbnail")[0]
+      .closest("div").style.opacity = "0";
+    console.log(i);
+  }
   for (let i = 0; i < 300; i++) {
     let relatedArray = [];
-
     let containerDiv = recomendationPanel
       .getElementsByTagName("ytd-compact-video-renderer")
       [i].getElementsByClassName("ytd-thumbnail")[0];
@@ -201,9 +212,18 @@ async function clearRelated() {
         related: relatedArray,
       }),
     });
-    console.log(relatedArray);
     result = await response.json();
-    if (result[0] < 1) {
+    let nonContainerDiv = recomendationPanel.getElementsByTagName(
+      "ytd-compact-video-renderer"
+    );
+    for (let j = i + 1; j < nonContainerDiv.length; j++) {
+      nonContainerDiv[j]
+        .getElementsByClassName("ytd-thumbnail")[0]
+        .closest("div").style.opacity = "0";
+    }
+    if (result[0] > 0) {
+      containerDiv.closest("div").style.opacity = "1";
+    } else {
       containerDiv.closest("div").style.display = "none";
     }
   }
